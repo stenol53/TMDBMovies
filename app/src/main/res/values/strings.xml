@@ -1,0 +1,14 @@
+<resources>
+    <string name="app_name">TMDBMovies</string>
+    <string name="username">Имя пользователя</string>
+    <string name="password">Пароль</string>
+    <string name="enter">Войти</string>
+    <string name="timeout_error">Время ожидания ответа от сервера истекло</string>
+    <string name="wrong_login_or_password_error">Неверное имя пользователя или пароль</string>
+    <string name="connection_error">Ошибка подключения</string>
+    <string name="need_login_and_password_error">Введите имя пользователя и пароль</string>
+    <string name="title_activity_bottom_navigation">MainActivity</string>
+    <string name="title_search">Search</string>
+    <string name="title_home">Home</string>
+    <string name="title_favourite">Favourites</string>
+</resources>
