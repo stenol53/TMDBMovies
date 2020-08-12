@@ -9,8 +9,10 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import com.voak.android.tmdbmovies.R
+import com.voak.android.tmdbmovies.ui.bottomnavigation.BaseBottomTabFragment
+import dagger.android.support.DaggerFragment
 
-class SearchFragment : Fragment() {
+class SearchFragment : DaggerFragment() {
 
     private lateinit var searchViewModel: SearchViewModel
 

@@ -9,8 +9,10 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import com.voak.android.tmdbmovies.R
+import com.voak.android.tmdbmovies.ui.bottomnavigation.BaseBottomTabFragment
+import dagger.android.support.DaggerFragment
 
-class FavouriteFragment : Fragment() {
+class FavouriteFragment : DaggerFragment() {
 
     private lateinit var favouriteViewModel: FavouriteViewModel
 
