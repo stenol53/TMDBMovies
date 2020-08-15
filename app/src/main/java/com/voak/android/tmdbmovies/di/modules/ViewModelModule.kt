@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.voak.android.tmdbmovies.di.annotations.ViewModelKey
 import com.voak.android.tmdbmovies.ui.bottomnavigation.home.HomeViewModel
+import com.voak.android.tmdbmovies.ui.details.movie.MovieDetailsViewModel
 import com.voak.android.tmdbmovies.ui.login.LoginFragmentViewModel
 import com.voak.android.tmdbmovies.viewmodel.ViewModelFactory
 import dagger.Binds
@@ -22,6 +23,11 @@ abstract class ViewModelModule {
     @IntoMap
     @ViewModelKey(HomeViewModel::class)
     internal abstract fun bindHomeViewModel(viewModel: HomeViewModel): ViewModel
+
+    @Binds
+    @IntoMap
+    @ViewModelKey(MovieDetailsViewModel::class)
+    internal abstract fun bindMovieDetailsViewModel(viewModel: MovieDetailsViewModel): ViewModel
 
     @Binds
     internal abstract fun bindViewModelFactory(factory: ViewModelFactory): ViewModelProvider.Factory

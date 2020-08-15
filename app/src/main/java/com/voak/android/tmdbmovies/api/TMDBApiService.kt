@@ -1,9 +1,6 @@
 package com.voak.android.tmdbmovies.api
 
-import com.voak.android.tmdbmovies.model.MovieResult
-import com.voak.android.tmdbmovies.model.RequestTokenResponse
-import com.voak.android.tmdbmovies.model.SessionResponse
-import com.voak.android.tmdbmovies.model.TvResult
+import com.voak.android.tmdbmovies.model.*
 import com.voak.android.tmdbmovies.utils.REGION
 import io.reactivex.Observable
 import retrofit2.http.*
@@ -40,4 +37,6 @@ interface TMDBApiService {
         @Query("region") region: String = REGION
     ): Observable<MovieResult>
 
+    @GET("movie/{id}")
+    fun getMovieDetails(@Path("id") id: Int): Observable<MovieDetails>
 }

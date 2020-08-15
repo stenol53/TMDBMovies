@@ -1,15 +1,14 @@
 package com.voak.android.tmdbmovies.repository
 
 import android.annotation.SuppressLint
-import android.util.Log
 import com.voak.android.tmdbmovies.api.TMDBApiService
-import com.voak.android.tmdbmovies.model.*
+import com.voak.android.tmdbmovies.model.MovieResult
+import com.voak.android.tmdbmovies.model.Result
+import com.voak.android.tmdbmovies.model.TvResult
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.functions.BiFunction
 import io.reactivex.functions.Function3
 import io.reactivex.schedulers.Schedulers
-import java.util.*
 import javax.inject.Inject
 
 class HomeRepository @Inject constructor(private val apiService: TMDBApiService) {
@@ -41,21 +40,4 @@ class HomeRepository @Inject constructor(private val apiService: TMDBApiService)
                 { error -> callback(Result.Error(error.localizedMessage)) }
             )
     }
-//
-//    @SuppressLint("CheckResult")
-//    fun getNowPlayingMovies(callback: (Result<Any>) -> Unit) {
-//        Log.i(TAG, "repo")
-//        apiService.getMoviesNowPlaying()
-//            .subscribeOn(Schedulers.io())
-//            .observeOn(AndroidSchedulers.mainThread())
-//            .subscribe(
-//                {result ->
-//                    Log.i(TAG, result.result[0].posterPath)
-//                    callback(Result.Success(result.result)) },
-//                {error ->
-//                    Log.i(TAG, "error")
-//                    Log.i(TAG, error.localizedMessage)
-//                    callback(Result.Error(error.localizedMessage)) }
-//            )
-//    }
 }

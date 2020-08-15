@@ -22,8 +22,6 @@ class LoginFragment : DaggerFragment() {
     lateinit var viewModelFactory: ViewModelProvider.Factory
 
     private var binding: FragmentLoginBinding? = null
-    private lateinit var progress: ProgressIndicator
-    private lateinit var loginBtn: MaterialButton
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -44,9 +42,6 @@ class LoginFragment : DaggerFragment() {
             lifecycleOwner = this@LoginFragment
         }
 
-        progress = view.findViewById(R.id.login_progress)
-        loginBtn = view.findViewById(R.id.login_button)
-
         return binding?.root
     }
 
@@ -54,14 +49,13 @@ class LoginFragment : DaggerFragment() {
         super.onViewCreated(view, savedInstanceState)
 
         binding?.viewModel?.loading?.observe(viewLifecycleOwner, Observer {
-            loginBtn.visibility = if (it) View.GONE else View.VISIBLE
-            progress.visibility = if (it) View.VISIBLE else View.GONE
+            binding?.loginButton?.visibility = if (it) View.GONE else View.VISIBLE
+            binding?.loginProgress?.visibility = if (it) View.VISIBLE else View.GONE
         })
 
         binding?.viewModel?.loginError?.observe(viewLifecycleOwner, Observer {
-            login_error_text_view.visibility = if (it.isNullOrEmpty()) View.GONE else View.VISIBLE
+            binding?.loginErrorTextView?.visibility = if (it.isNullOrEmpty()) View.GONE else View.VISIBLE
         })
-
 
         binding?.viewModel?.sessionId?.observe(viewLifecycleOwner, Observer {
             if (!it.isNullOrEmpty()) {

@@ -5,11 +5,9 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
-import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import com.voak.android.tmdbmovies.R
-import com.voak.android.tmdbmovies.ui.bottomnavigation.BaseBottomTabFragment
 import dagger.android.support.DaggerFragment
 
 class SearchFragment : DaggerFragment() {

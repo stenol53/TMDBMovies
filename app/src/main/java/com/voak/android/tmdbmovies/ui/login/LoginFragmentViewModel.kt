@@ -29,6 +29,10 @@ class LoginFragmentViewModel @Inject constructor(private val loginRepository: Lo
      */
     lateinit var getString : (Int) -> String
 
+    init {
+        Log.i("LoginFragmentViewModel", this.toString())
+    }
+
     /**
      *  Bind onClick method of login_button.
      */

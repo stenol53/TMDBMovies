@@ -1,10 +1,12 @@
 package com.voak.android.tmdbmovies.ui.bottomnavigation.home
 
+import android.graphics.drawable.Drawable
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.core.content.res.ResourcesCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.squareup.picasso.Picasso
 import com.voak.android.tmdbmovies.R
@@ -13,9 +15,9 @@ import com.voak.android.tmdbmovies.ui.bottomnavigation.home.NowPlayingMovieAdapt
 import com.voak.android.tmdbmovies.utils.WIDE_IMAGE_BASE_URL
 import java.util.*
 
-class NowPlayingMovieAdapter : RecyclerView.Adapter<NowPlayingMovieViewHolder>() {
-
+class NowPlayingMovieAdapter(private val holderOnClick: (Int) -> Unit) : RecyclerView.Adapter<NowPlayingMovieViewHolder>() {
     private var movies: List<Movie> = Collections.emptyList()
+
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): NowPlayingMovieViewHolder {
         val view = LayoutInflater.from(parent.context)
@@ -38,7 +40,14 @@ class NowPlayingMovieAdapter : RecyclerView.Adapter<NowPlayingMovieViewHolder>()
     inner class NowPlayingMovieViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         private val poster: ImageView = itemView.findViewById(R.id.now_playing_poster)
         private val title: TextView = itemView.findViewById(R.id.now_playing_title)
+        private val rating: TextView = itemView.findViewById(R.id.now_playing_rating_view)
         private lateinit var movie: Movie
+
+        init {
+            itemView.setOnClickListener {
+                holderOnClick(movie.id)
+            }
+        }
 
         fun bind(movie: Movie) {
             this.movie = movie
@@ -48,6 +57,23 @@ class NowPlayingMovieAdapter : RecyclerView.Adapter<NowPlayingMovieViewHolder>()
                 .into(poster)
 
             title.text = this.movie.title
+            rating.text = String.format("%.1f", this.movie.voteAverage).also {
+                val background: Drawable? = when {
+                    it.toDouble() >= 7.0 -> {
+                        ResourcesCompat.getDrawable(itemView.resources, R.drawable.oval_green, null)
+                    }
+                    it.toDouble() >= 5.0 && it.toDouble() < 7.0 -> {
+                        ResourcesCompat.getDrawable(itemView.resources, R.drawable.oval_yellow, null)
+                    }
+                    it.toDouble() < 5.0 -> {
+                        ResourcesCompat.getDrawable(itemView.resources, R.drawable.oval_red, null)
+                    }
+                    else -> {
+                        null
+                    }
+                }
+                rating.background = background
+            }
         }
     }
 }

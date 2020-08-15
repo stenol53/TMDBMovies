@@ -10,5 +10,7 @@ data class TvShow(
     @SerializedName("backdrop_path")
     val widePosterPath: String,
     @SerializedName("name")
-    val title: String
+    val title: String,
+    @SerializedName("vote_average")
+    val voteAverage: Double
 )

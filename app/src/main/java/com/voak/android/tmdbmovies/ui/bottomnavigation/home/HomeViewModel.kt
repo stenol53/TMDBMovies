@@ -24,6 +24,9 @@ class HomeViewModel @Inject constructor(private val homeRepository: HomeReposito
     val loading = _loading
 
     fun onAttached() {
+
+        Log.i(TAG, this.toString())
+
         _loading.value = true
         homeRepository.getAllData {
             if (it is Result.Success) {
