@@ -3,12 +3,10 @@ package com.voak.android.tmdbmovies.repository
 import android.annotation.SuppressLint
 import android.util.Log
 import com.voak.android.tmdbmovies.api.TMDBApiService
-import com.voak.android.tmdbmovies.model.MovieDetails
-import com.voak.android.tmdbmovies.model.Result
-import com.voak.android.tmdbmovies.model.VideoResult
+import com.voak.android.tmdbmovies.model.*
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.functions.BiFunction
+import io.reactivex.functions.Function4
 import io.reactivex.schedulers.Schedulers
 import javax.inject.Inject
 
@@ -17,6 +15,8 @@ class MovieDetailsRepository @Inject constructor(private val apiService: TMDBApi
     companion object {
         const val MOVIE_DETAILS: String = "movie_details"
         const val VIDEOS: String = "videos"
+        const val CAST: String = "cast"
+        const val SIMILAR_MOVIES = "similar_movies"
     }
 
     @SuppressLint("CheckResult")
@@ -24,32 +24,33 @@ class MovieDetailsRepository @Inject constructor(private val apiService: TMDBApi
         Observable.zip(
             apiService.getMovieDetails(id),
             apiService.getVideos(id),
-            BiFunction<MovieDetails, VideoResult, Map<String, Any>> { movieDetails, videos ->
+            apiService.getCast(id),
+            apiService.getSimilarMovies(id),
+            Function4<MovieDetails, VideoResult, CastResult, MovieResult, Map<String, Any>> {
+                    details, videos, cast, similar ->
                 mapOf(
-                    MOVIE_DETAILS to movieDetails,
-                    VIDEOS to videos.result
+                    MOVIE_DETAILS to details,
+                    VIDEOS to videos.result,
+                    CAST to cast.cast,
+                    SIMILAR_MOVIES to similar
                 )
             }).subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe(
                 { result ->
-                    Log.i("MovieDetailsRepository", "RESULT_OK")
                     callback(Result.Success(result))
                 },
                 { error -> callback(Result.Error(error.localizedMessage)) }
             )
-
     }
 
     @SuppressLint("CheckResult")
-    fun getMovieDetails(id: Int, callback: (Result<Any>) -> Unit) {
-        apiService.getMovieDetails(id)
+    fun getSimilar(id: Int, page: Int, callback: (Result<Any>) -> Unit) {
+        apiService.getSimilarMovies(id, page)
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe(
-                { result ->
-                    Log.i("MovieDetailsRepository", "result OK")
-                    callback(Result.Success(result)) },
+                { result -> callback(Result.Success(result.result)) },
                 { error -> callback(Result.Error(error.localizedMessage)) }
             )
     }

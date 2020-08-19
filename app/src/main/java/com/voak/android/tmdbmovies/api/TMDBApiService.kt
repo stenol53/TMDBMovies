@@ -42,4 +42,13 @@ interface TMDBApiService {
 
     @GET("movie/{id}/videos")
     fun getVideos(@Path("id") id: Int): Observable<VideoResult>
+
+    @GET("movie/{id}/credits")
+    fun getCast(@Path("id") id: Int): Observable<CastResult>
+
+    @GET("movie/{id}/similar")
+    fun getSimilarMovies(
+        @Path("id") id: Int,
+        @Query("page") page: Int = 1
+    ): Observable<MovieResult>
 }

@@ -10,11 +10,15 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.observe
+import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.squareup.picasso.Picasso
 import com.voak.android.tmdbmovies.R
 import com.voak.android.tmdbmovies.databinding.FragmentMovieDetailsBinding
+import com.voak.android.tmdbmovies.model.Cast
+import com.voak.android.tmdbmovies.ui.bottomnavigation.home.PopularMoviesAdapter
+import com.voak.android.tmdbmovies.ui.details.DetailsActivity
 import com.voak.android.tmdbmovies.utils.IMAGE_BASE_URL
 import com.voak.android.tmdbmovies.utils.WIDE_IMAGE_BASE_URL
 import com.voak.android.tmdbmovies.utils.YOUTUBE_VIDEO_URL
@@ -22,6 +26,7 @@ import dagger.android.support.DaggerAppCompatActivity
 import dagger.android.support.DaggerFragment
 import kotlinx.android.synthetic.main.fragment_movie_details.*
 import javax.inject.Inject
+import kotlin.concurrent.fixedRateTimer
 
 class MovieDetailsFragment : DaggerFragment() {
 
@@ -57,17 +62,47 @@ class MovieDetailsFragment : DaggerFragment() {
             lifecycleOwner = this@MovieDetailsFragment
         }
 
+        initRecyclers()
+        bindViews()
+
+        return binding?.root
+    }
+
+    private fun initRecyclers() {
         binding?.videoRecyclerView?.layoutManager = LinearLayoutManager(context).apply {
             orientation = LinearLayoutManager.HORIZONTAL
         }
-
         binding?.videoRecyclerView?.adapter = VideosAdapter() {
             openVideo(it)
         }
 
-        bindViews()
+        binding?.castRecyclerView?.layoutManager = LinearLayoutManager(context).apply {
+            orientation = LinearLayoutManager.HORIZONTAL
+        }
+        binding?.castRecyclerView?.adapter = CastAdapter()
 
-        return binding?.root
+        binding?.similarRecyclerView?.layoutManager = LinearLayoutManager(context).apply {
+            orientation = LinearLayoutManager.HORIZONTAL
+        }
+
+        binding?.similarRecyclerView?.addOnScrollListener(object: RecyclerView.OnScrollListener() {
+            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+                super.onScrolled(recyclerView, dx, dy)
+
+                val lastPos: Int = (recyclerView.layoutManager as LinearLayoutManager)
+                    .findLastVisibleItemPosition()
+                val itemsCount: Int = (binding?.similarRecyclerView?.adapter as PopularMoviesAdapter).itemCount
+
+                if (dx > 0 && lastPos >= itemsCount - 3) {
+                    binding?.viewModel?.loadSimilar()
+                }
+            }
+        })
+
+        binding?.similarRecyclerView?.adapter = PopularMoviesAdapter() {
+            val intent = DetailsActivity.instance(DetailsActivity.MOVIE_FRAGMENT, it, requireContext())
+            startActivity(intent)
+        }
     }
 
     private fun bindViews() {
@@ -126,17 +161,20 @@ class MovieDetailsFragment : DaggerFragment() {
 
         binding?.viewModel?.videos?.observe(viewLifecycleOwner) {
             (binding?.videoRecyclerView?.adapter as VideosAdapter).setVideos(it)
-            if (it.size == 1) {
-                binding?.videoRecyclerView?.overScrollMode = RecyclerView.OVER_SCROLL_NEVER
-            } else {
-                binding?.videoRecyclerView?.overScrollMode = RecyclerView.OVER_SCROLL_IF_CONTENT_SCROLLS
-            }
+        }
+
+        binding?.viewModel?.cast?.observe(viewLifecycleOwner) {
+            (binding?.castRecyclerView?.adapter as CastAdapter).setCast(it)
+        }
+
+        binding?.viewModel?.similarMovies?.observe(viewLifecycleOwner) {
+            (binding?.similarRecyclerView?.adapter as PopularMoviesAdapter).setMovies(it)
         }
 
         binding?.viewModel?.onAttached(requireArguments().getInt(ARG_MOVIE_ID))
     }
 
-    fun openVideo(key: String) {
+    private fun openVideo(key: String) {
         val intent = Intent(Intent.ACTION_VIEW, Uri.parse(YOUTUBE_VIDEO_URL + key))
         try {
             startActivity(intent)
