@@ -25,4 +25,6 @@
     <string name="more">Еще</string>
     <string name="tv_shows_on_the_air">TV шоу в эфире</string>
     <string name="popular_movies">Популярные фильмы</string>
+    <string name="video">Видео</string>
+    <string name="description_video">video</string>
 </resources>

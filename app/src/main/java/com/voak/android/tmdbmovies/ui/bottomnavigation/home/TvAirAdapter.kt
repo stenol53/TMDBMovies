@@ -58,22 +58,18 @@ class TvAirAdapter(private val holderOnClick: (Int) -> Unit) : RecyclerView.Adap
             title.text = this.tvShow.title
 
             title.text = this.tvShow.title
-            rating.text = String.format("%.1f", this.tvShow.voteAverage).also {
-                val background: Drawable? = when {
-                    it.toDouble() >= 7.0 -> {
-                        ResourcesCompat.getDrawable(itemView.resources, R.drawable.oval_green, null)
-                    }
-                    it.toDouble() >= 5.0 && it.toDouble() < 7.0 -> {
-                        ResourcesCompat.getDrawable(itemView.resources, R.drawable.oval_yellow, null)
-                    }
-                    it.toDouble() < 5.0 -> {
-                        ResourcesCompat.getDrawable(itemView.resources, R.drawable.oval_red, null)
-                    }
-                    else -> {
-                        null
-                    }
+            rating.text = String.format("%.1f", this.tvShow.voteAverage).replace(",",".")
+            when {
+                this.tvShow.voteAverage >= 7.0 -> {
+                    rating.setBackgroundResource(R.drawable.oval_green)
                 }
-                rating.background = background
+
+                this.tvShow.voteAverage >= 5.0 && this.tvShow.voteAverage < 7.0 -> {
+                    rating.setBackgroundResource(R.drawable.oval_yellow)
+                }
+                this.tvShow.voteAverage < 5.0 -> {
+                    rating.setBackgroundResource(R.drawable.oval_yellow)
+                }
             }
         }
     }

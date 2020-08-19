@@ -39,4 +39,7 @@ interface TMDBApiService {
 
     @GET("movie/{id}")
     fun getMovieDetails(@Path("id") id: Int): Observable<MovieDetails>
+
+    @GET("movie/{id}/videos")
+    fun getVideos(@Path("id") id: Int): Observable<VideoResult>
 }

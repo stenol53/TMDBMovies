@@ -16,9 +16,9 @@ class HomeRepository @Inject constructor(private val apiService: TMDBApiService)
     private val TAG: String = "HomeRepository"
 
     companion object {
-        const val RESULT_1: String = "result_1"
-        const val RESULT_2: String = "result_2"
-        const val RESULT_3: String = "result_3"
+        const val RESULT_1: String = "movies_now_playing"
+        const val RESULT_2: String = "tv_shows_on_the_air"
+        const val RESULT_3: String = "popular_movies"
     }
 
     @SuppressLint("CheckResult")

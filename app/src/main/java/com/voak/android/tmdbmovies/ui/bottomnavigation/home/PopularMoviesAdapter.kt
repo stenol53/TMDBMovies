@@ -1,11 +1,13 @@
 package com.voak.android.tmdbmovies.ui.bottomnavigation.home
 
 import android.graphics.drawable.Drawable
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.core.content.ContextCompat
 import androidx.core.content.res.ResourcesCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.squareup.picasso.Picasso
@@ -56,22 +58,19 @@ class PopularMoviesAdapter(private val holderOnClick: (Int) -> Unit) : RecyclerV
                 .into(poster)
 
             title.text = this.movie.title
-            rating.text = String.format("%.1f", this.movie.voteAverage).also {
-                val background: Drawable? = when {
-                    it.toDouble() >= 7.0 -> {
-                        ResourcesCompat.getDrawable(itemView.resources, R.drawable.oval_green, null)
-                    }
-                    it.toDouble() >= 5.0 && it.toDouble() < 7.0 -> {
-                        ResourcesCompat.getDrawable(itemView.resources, R.drawable.oval_yellow, null)
-                    }
-                    it.toDouble() < 5.0 -> {
-                        ResourcesCompat.getDrawable(itemView.resources, R.drawable.oval_red, null)
-                    }
-                    else -> {
-                        null
-                    }
+
+            rating.text = String.format("%.1f", this.movie.voteAverage).replace(",",".")
+            when {
+                this.movie.voteAverage >= 7.0 -> {
+                    rating.setBackgroundResource(R.drawable.oval_green)
                 }
-                rating.background = background
+
+                this.movie.voteAverage >= 5.0 && this.movie.voteAverage < 7.0 -> {
+                    rating.setBackgroundResource(R.drawable.oval_yellow)
+                }
+                this.movie.voteAverage < 5.0 -> {
+                    rating.setBackgroundResource(R.drawable.oval_yellow)
+                }
             }
         }
     }

@@ -1,5 +1,8 @@
 package com.voak.android.tmdbmovies.ui.details.movie
 
+import android.content.ActivityNotFoundException
+import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -7,11 +10,14 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.observe
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.squareup.picasso.Picasso
 import com.voak.android.tmdbmovies.R
 import com.voak.android.tmdbmovies.databinding.FragmentMovieDetailsBinding
 import com.voak.android.tmdbmovies.utils.IMAGE_BASE_URL
 import com.voak.android.tmdbmovies.utils.WIDE_IMAGE_BASE_URL
+import com.voak.android.tmdbmovies.utils.YOUTUBE_VIDEO_URL
 import dagger.android.support.DaggerAppCompatActivity
 import dagger.android.support.DaggerFragment
 import kotlinx.android.synthetic.main.fragment_movie_details.*
@@ -49,6 +55,14 @@ class MovieDetailsFragment : DaggerFragment() {
         binding = FragmentMovieDetailsBinding.bind(view).apply {
             viewModel = movieDetailsViewModel
             lifecycleOwner = this@MovieDetailsFragment
+        }
+
+        binding?.videoRecyclerView?.layoutManager = LinearLayoutManager(context).apply {
+            orientation = LinearLayoutManager.HORIZONTAL
+        }
+
+        binding?.videoRecyclerView?.adapter = VideosAdapter() {
+            openVideo(it)
         }
 
         bindViews()
@@ -110,7 +124,25 @@ class MovieDetailsFragment : DaggerFragment() {
             }
         }
 
+        binding?.viewModel?.videos?.observe(viewLifecycleOwner) {
+            (binding?.videoRecyclerView?.adapter as VideosAdapter).setVideos(it)
+            if (it.size == 1) {
+                binding?.videoRecyclerView?.overScrollMode = RecyclerView.OVER_SCROLL_NEVER
+            } else {
+                binding?.videoRecyclerView?.overScrollMode = RecyclerView.OVER_SCROLL_IF_CONTENT_SCROLLS
+            }
+        }
+
         binding?.viewModel?.onAttached(requireArguments().getInt(ARG_MOVIE_ID))
+    }
+
+    fun openVideo(key: String) {
+        val intent = Intent(Intent.ACTION_VIEW, Uri.parse(YOUTUBE_VIDEO_URL + key))
+        try {
+            startActivity(intent)
+        } catch (ex : ActivityNotFoundException) {
+            Log.i("MovieDetailsFragment", ex.message.orEmpty())
+        }
     }
 
 }

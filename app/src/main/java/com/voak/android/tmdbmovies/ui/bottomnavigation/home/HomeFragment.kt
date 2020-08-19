@@ -88,6 +88,8 @@ class HomeFragment : DaggerFragment() {
         binding?.popularMoviesRecyclerView?.adapter = PopularMoviesAdapter() {
             navigateToMovieDetailsCallback(it)
         }
+
+
     }
 
     private fun navigateToMovieDetailsCallback(id: Int) {

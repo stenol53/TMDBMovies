@@ -18,7 +18,6 @@ import java.util.*
 class NowPlayingMovieAdapter(private val holderOnClick: (Int) -> Unit) : RecyclerView.Adapter<NowPlayingMovieViewHolder>() {
     private var movies: List<Movie> = Collections.emptyList()
 
-
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): NowPlayingMovieViewHolder {
         val view = LayoutInflater.from(parent.context)
             .inflate(R.layout.now_playing_movie_item, parent, false)
@@ -57,22 +56,18 @@ class NowPlayingMovieAdapter(private val holderOnClick: (Int) -> Unit) : Recycle
                 .into(poster)
 
             title.text = this.movie.title
-            rating.text = String.format("%.1f", this.movie.voteAverage).also {
-                val background: Drawable? = when {
-                    it.toDouble() >= 7.0 -> {
-                        ResourcesCompat.getDrawable(itemView.resources, R.drawable.oval_green, null)
-                    }
-                    it.toDouble() >= 5.0 && it.toDouble() < 7.0 -> {
-                        ResourcesCompat.getDrawable(itemView.resources, R.drawable.oval_yellow, null)
-                    }
-                    it.toDouble() < 5.0 -> {
-                        ResourcesCompat.getDrawable(itemView.resources, R.drawable.oval_red, null)
-                    }
-                    else -> {
-                        null
-                    }
+            rating.text = String.format("%.1f", this.movie.voteAverage).replace(",", ".")
+            when {
+                this.movie.voteAverage >= 7.0 -> {
+                    rating.setBackgroundResource(R.drawable.oval_green)
                 }
-                rating.background = background
+
+                this.movie.voteAverage >= 5.0 && this.movie.voteAverage < 7.0 -> {
+                    rating.setBackgroundResource(R.drawable.oval_yellow)
+                }
+                this.movie.voteAverage < 5.0 -> {
+                    rating.setBackgroundResource(R.drawable.oval_yellow)
+                }
             }
         }
     }
