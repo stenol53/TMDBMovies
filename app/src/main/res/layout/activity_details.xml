@@ -7,7 +7,7 @@
     tools:context=".ui.details.DetailsActivity">
 
     <FrameLayout
-        android:id="@+id/details_container"
+        android:id="@+id/fragment_container"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         app:layout_constraintBottom_toBottomOf="parent"

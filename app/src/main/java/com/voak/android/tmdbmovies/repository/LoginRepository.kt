@@ -1,28 +1,38 @@
 package com.voak.android.tmdbmovies.repository
 
 import android.annotation.SuppressLint
-import android.util.Log
-import com.voak.android.tmdbmovies.api.TMDBApiService
-import com.voak.android.tmdbmovies.model.Result
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
+import com.voak.android.tmdbmovies.api.ClientService
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 import javax.inject.Inject
 
 
-class LoginRepository @Inject constructor(private val apiService: TMDBApiService) {
+class LoginRepository @Inject constructor(private val clientService: ClientService) {
 
     private val TAG: String = "LoginRepository"
 
+    private val _loading = MutableLiveData<Boolean>().apply { value = false }
+    val loading: LiveData<Boolean> = _loading
+    private val _loginError = MutableLiveData<String?>().apply { value = null }
+    val loginError: LiveData<String?> = _loginError
+    private val _sessionId = MutableLiveData<String?>().apply { value = null }
+    val sessionId: LiveData<String?> = _sessionId
+
+
     @SuppressLint("CheckResult")
-    fun makeAuth(username: String, password: String, callback: (Result<Any>) -> Unit) {
-        apiService.createRequestToken()
-            .switchMap { t -> apiService.validateRequestToken(username, password, t.requestToken) }
-            .switchMap { t -> apiService.createSession(t.requestToken) }
+    fun makeAuth(username: String, password: String) {
+        _loading.value = true
+        clientService.createRequestToken()
+            .switchMap { t -> clientService.validateRequestToken(username, password, t.requestToken) }
+            .switchMap { t -> clientService.createSession(t.requestToken) }
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe(
-                { result -> callback(Result.Success(result.sessionId)) },
-                { error -> callback(Result.Error(error.localizedMessage)) }
+                { result -> _sessionId.value = result.sessionId },
+                { error -> _loginError.value = error.localizedMessage }
             )
     }
+
 }

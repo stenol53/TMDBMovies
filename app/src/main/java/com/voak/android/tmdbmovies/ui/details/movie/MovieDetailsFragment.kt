@@ -10,23 +10,17 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.observe
-import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.squareup.picasso.Picasso
 import com.voak.android.tmdbmovies.R
 import com.voak.android.tmdbmovies.databinding.FragmentMovieDetailsBinding
-import com.voak.android.tmdbmovies.model.Cast
 import com.voak.android.tmdbmovies.ui.bottomnavigation.home.PopularMoviesAdapter
-import com.voak.android.tmdbmovies.ui.details.DetailsActivity
 import com.voak.android.tmdbmovies.utils.IMAGE_BASE_URL
 import com.voak.android.tmdbmovies.utils.WIDE_IMAGE_BASE_URL
 import com.voak.android.tmdbmovies.utils.YOUTUBE_VIDEO_URL
-import dagger.android.support.DaggerAppCompatActivity
 import dagger.android.support.DaggerFragment
-import kotlinx.android.synthetic.main.fragment_movie_details.*
 import javax.inject.Inject
-import kotlin.concurrent.fixedRateTimer
 
 class MovieDetailsFragment : DaggerFragment() {
 
@@ -94,14 +88,16 @@ class MovieDetailsFragment : DaggerFragment() {
                 val itemsCount: Int = (binding?.similarRecyclerView?.adapter as PopularMoviesAdapter).itemCount
 
                 if (dx > 0 && lastPos >= itemsCount - 3) {
-                    binding?.viewModel?.loadSimilar()
+                    binding?.viewModel?.loadSimilar(requireArguments().getInt(ARG_MOVIE_ID))
                 }
             }
         })
 
         binding?.similarRecyclerView?.adapter = PopularMoviesAdapter() {
-            val intent = DetailsActivity.instance(DetailsActivity.MOVIE_FRAGMENT, it, requireContext())
-            startActivity(intent)
+            parentFragmentManager.beginTransaction()
+                .replace(R.id.fragment_container, instance(it))
+                .addToBackStack(null)
+                .commit()
         }
     }
 
@@ -118,7 +114,7 @@ class MovieDetailsFragment : DaggerFragment() {
             }
         }
 
-        binding?.viewModel?.loading?.observe(viewLifecycleOwner) {
+        binding?.viewModel?.getLoadingLiveData()?.observe(viewLifecycleOwner) {
             if (it) {
                 binding?.movieDetailsContent?.visibility = View.GONE
                 binding?.appBarLayout?.visibility = View.GONE
@@ -130,7 +126,7 @@ class MovieDetailsFragment : DaggerFragment() {
             }
         }
 
-        binding?.viewModel?.movie?.observe(viewLifecycleOwner) { details ->
+        binding?.viewModel?.getMovieLiveData()?.observe(viewLifecycleOwner) { details ->
             if (details != null) {
 
                 binding?.movieDetailsToolbar?.title = details.title
@@ -159,15 +155,15 @@ class MovieDetailsFragment : DaggerFragment() {
             }
         }
 
-        binding?.viewModel?.videos?.observe(viewLifecycleOwner) {
+        binding?.viewModel?.getVideosLiveData()?.observe(viewLifecycleOwner) {
             (binding?.videoRecyclerView?.adapter as VideosAdapter).setVideos(it)
         }
 
-        binding?.viewModel?.cast?.observe(viewLifecycleOwner) {
+        binding?.viewModel?.getCastLiveData()?.observe(viewLifecycleOwner) {
             (binding?.castRecyclerView?.adapter as CastAdapter).setCast(it)
         }
 
-        binding?.viewModel?.similarMovies?.observe(viewLifecycleOwner) {
+        binding?.viewModel?.getSimilarMoviesLiveData()?.observe(viewLifecycleOwner) {
             (binding?.similarRecyclerView?.adapter as PopularMoviesAdapter).setMovies(it)
         }
 

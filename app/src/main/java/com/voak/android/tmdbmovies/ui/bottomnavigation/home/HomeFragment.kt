@@ -42,7 +42,7 @@ class HomeFragment : DaggerFragment() {
     }
 
     private fun bindViews() {
-        binding?.viewModel?.loading?.observe(viewLifecycleOwner) {
+        binding?.viewModel?.getLoadingLiveData()?.observe(viewLifecycleOwner) {
             if (it) {
                 binding?.homeContentLayout?.visibility = View.GONE
                 binding?.homeLoading?.visibility = View.VISIBLE
@@ -52,15 +52,15 @@ class HomeFragment : DaggerFragment() {
             }
         }
 
-        binding?.viewModel?.nowPlayingMovies?.observe(viewLifecycleOwner) {
+        binding?.viewModel?.getNowPlayingMoviesLiveData()?.observe(viewLifecycleOwner) {
             (binding?.cinemaRecyclerView?.adapter as NowPlayingMovieAdapter).setMovies(it)
         }
 
-        binding?.viewModel?.tvShowOnTheAir?.observe(viewLifecycleOwner) {
+        binding?.viewModel?.getTvShowsOnTheAirLiveData()?.observe(viewLifecycleOwner) {
             (binding?.airTvRecyclerView?.adapter as TvAirAdapter).setTvShows(it)
         }
 
-        binding?.viewModel?.popularMovies?.observe(viewLifecycleOwner) {
+        binding?.viewModel?.getPopularMoviesLiveData()?.observe(viewLifecycleOwner) {
             (binding?.popularMoviesRecyclerView?.adapter as PopularMoviesAdapter).setMovies(it)
         }
 
@@ -88,8 +88,6 @@ class HomeFragment : DaggerFragment() {
         binding?.popularMoviesRecyclerView?.adapter = PopularMoviesAdapter() {
             navigateToMovieDetailsCallback(it)
         }
-
-
     }
 
     private fun navigateToMovieDetailsCallback(id: Int) {
