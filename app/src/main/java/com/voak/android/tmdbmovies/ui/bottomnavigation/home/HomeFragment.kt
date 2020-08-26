@@ -79,7 +79,7 @@ class HomeFragment : DaggerFragment() {
             orientation = LinearLayoutManager.HORIZONTAL
         }
         binding?.airTvRecyclerView?.adapter = TvAirAdapter() {
-            // EMPTY !!!
+            navigateToTvShowDetailsCallback(it)
         }
 
         binding?.popularMoviesRecyclerView?.layoutManager = LinearLayoutManager(context).apply {
@@ -92,6 +92,11 @@ class HomeFragment : DaggerFragment() {
 
     private fun navigateToMovieDetailsCallback(id: Int) {
         val intent = DetailsActivity.instance(DetailsActivity.MOVIE_FRAGMENT, id, requireContext())
+        startActivity(intent)
+    }
+
+    private fun navigateToTvShowDetailsCallback(id: Int) {
+        val intent = DetailsActivity.instance(DetailsActivity.TV_SHOW_FRAGMENT, id, requireContext())
         startActivity(intent)
     }
 }

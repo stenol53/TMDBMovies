@@ -13,9 +13,12 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
+            android:name=".ui.person.PersonDetailsActivity"
+            android:theme="@style/AppThemeNoActionBar" />
+        <activity
             android:name=".ui.details.DetailsActivity"
             android:theme="@style/AppThemeNoActionBar"
-            android:windowSoftInputMode="adjustResize"/>
+            android:windowSoftInputMode="adjustResize" />
         <activity
             android:name=".ui.bottomnavigation.BottomNavigationActivity"
             android:theme="@style/AppTheme" />

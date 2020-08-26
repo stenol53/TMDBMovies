@@ -41,7 +41,7 @@ interface TMDBApiService {
     fun getMovieDetails(@Path("id") id: Int): Observable<MovieDetails>
 
     @GET("movie/{id}/videos")
-    fun getVideos(@Path("id") id: Int): Observable<VideoResult>
+    fun getMovieVideos(@Path("id") id: Int): Observable<VideoResult>
 
     @GET("movie/{id}/credits")
     fun getCast(@Path("id") id: Int): Observable<CastResult>
@@ -51,4 +51,29 @@ interface TMDBApiService {
         @Path("id") id: Int,
         @Query("page") page: Int = 1
     ): Observable<MovieResult>
+
+    @GET("tv/{id}")
+    fun getTvShowDetails(@Path("id") id: Int): Observable<TvShowDetails>
+
+    @GET("tv/{id}/videos")
+    fun getTvShowVideos(@Path("id") id: Int): Observable<VideoResult>
+
+    @GET("tv/{id}/similar")
+    fun getSimilarTvShows(
+        @Path("id") id: Int,
+        @Query("page") page: Int = 1
+    ): Observable<TvResult>
+
+    @GET("tv/{id}/credits")
+    fun getTvShowCast(@Path("id") id: Int): Observable<CastResult>
+
+    @GET("person/{id}")
+    fun getPersonDetails(@Path("id") id: Int): Observable<PersonDetails>
+
+    @GET("person/{id}/movie_credits")
+    fun getPersonMovies(@Path("id") id: Int): Observable<PersonMoviesResult>
+
+    @GET("person/{id}/tv_credits")
+    fun getPersonTv(@Path("id") id: Int): Observable<PersonTvShowsResult>
+
 }

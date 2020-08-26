@@ -13,7 +13,7 @@ import com.voak.android.tmdbmovies.ui.details.movie.CastAdapter.CastViewHolder
 import com.voak.android.tmdbmovies.utils.IMAGE_BASE_URL
 import java.util.*
 
-class CastAdapter : RecyclerView.Adapter<CastViewHolder>() {
+class CastAdapter(private val holderCallback: (Int) -> Unit) : RecyclerView.Adapter<CastViewHolder>() {
     private var cast: List<Cast> = Collections.emptyList()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CastViewHolder {
@@ -39,6 +39,12 @@ class CastAdapter : RecyclerView.Adapter<CastViewHolder>() {
         private val image: ImageView = itemView.findViewById(R.id.cast_image)
         private val name: TextView = itemView.findViewById(R.id.cast_name)
         private val character: TextView = itemView.findViewById(R.id.character_name)
+
+        init {
+            itemView.setOnClickListener {
+                holderCallback(cast.id)
+            }
+        }
 
         fun bind(cast: Cast) {
             this.cast = cast

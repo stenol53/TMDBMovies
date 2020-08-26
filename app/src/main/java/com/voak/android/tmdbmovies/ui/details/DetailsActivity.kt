@@ -4,11 +4,8 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
-import androidx.fragment.app.Fragment
 import com.voak.android.tmdbmovies.BaseActivity
 import com.voak.android.tmdbmovies.R
-import com.voak.android.tmdbmovies.ui.details.movie.MovieDetailsFragment
-import dagger.android.support.DaggerAppCompatActivity
 
 class DetailsActivity : BaseActivity() {
     companion object {
@@ -37,19 +34,10 @@ class DetailsActivity : BaseActivity() {
         if (savedInstanceState == null) {
             Log.i("DetailsActivity", "CREATED")
 
-            viewRouter.showDetailsFragment(intent.getIntExtra(EXTRA_ID, -1))
-//
-//            when (intent.getIntExtra(EXTRA_FRAGMENT, -1)) {
-//                1 -> { openFragment(MovieDetailsFragment.instance(intent.getIntExtra(EXTRA_ID, -1))) }
-//                2 -> {  }
-//                else -> { /* Error */}
-//            }
+            when (intent.getIntExtra(EXTRA_FRAGMENT, -1)) {
+                MOVIE_FRAGMENT -> viewRouter.showMovieDetailsFragment(intent.getIntExtra(EXTRA_ID, -1))
+                TV_SHOW_FRAGMENT -> viewRouter.showTvShowDetailsFragment(intent.getIntExtra(EXTRA_ID, -1))
+            }
         }
     }
-
-//    private fun openFragment(fragment: Fragment) {
-//        supportFragmentManager.beginTransaction()
-//            .add(R.id.fragment_container, fragment)
-//            .commit()
-//    }
 }

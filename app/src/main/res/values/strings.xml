@@ -29,4 +29,10 @@
     <string name="description_video">video</string>
     <string name="description_cast_image">castImage</string>
     <string name="cast">В ролях</string>
+    <string name="seasons">Сезоны: %1$d</string>
+    <string name="episodes">Серий: %1$d</string>
+    <string name="biography">Биография</string>
+    <string name="age">Возраст: %1$d</string>
+    <string name="birthday">Дата рождения: %1$s</string>
+    <string name="place_of_birth">Место рождения: %1$s</string>
 </resources>

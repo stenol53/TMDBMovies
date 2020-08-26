@@ -2,10 +2,7 @@ package com.voak.android.tmdbmovies.di.components
 
 import android.app.Application
 import com.voak.android.tmdbmovies.BaseApp
-import com.voak.android.tmdbmovies.di.modules.AppModule
-import com.voak.android.tmdbmovies.di.modules.BottomNavigationActivityModule
-import com.voak.android.tmdbmovies.di.modules.DetailsActivityModule
-import com.voak.android.tmdbmovies.di.modules.LoginActivityModule
+import com.voak.android.tmdbmovies.di.modules.*
 import dagger.BindsInstance
 import dagger.Component
 import dagger.android.AndroidInjectionModule
@@ -19,7 +16,8 @@ import javax.inject.Singleton
         AppModule::class,
         LoginActivityModule::class,
         BottomNavigationActivityModule::class,
-        DetailsActivityModule::class
+        DetailsActivityModule::class,
+        PersonDetailsActivityModule::class
     ]
 )
 interface AppComponent : AndroidInjector<BaseApp>{

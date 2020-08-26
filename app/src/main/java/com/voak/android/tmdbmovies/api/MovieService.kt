@@ -22,7 +22,7 @@ class MovieService @Inject constructor(private val apiService: TMDBApiService) {
     }
 
     fun getVideos(id: Int): Observable<VideoResult> {
-        return apiService.getVideos(id)
+        return apiService.getMovieVideos(id)
     }
 
     fun getCast(id: Int): Observable<CastResult> {
