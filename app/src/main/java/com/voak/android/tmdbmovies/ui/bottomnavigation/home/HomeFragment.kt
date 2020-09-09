@@ -1,5 +1,6 @@
 package com.voak.android.tmdbmovies.ui.bottomnavigation.home
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -10,6 +11,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.voak.android.tmdbmovies.R
 import com.voak.android.tmdbmovies.databinding.FragmentHomeBinding
 import com.voak.android.tmdbmovies.ui.details.DetailsActivity
+import com.voak.android.tmdbmovies.ui.movielist.MovieListActivity
 import dagger.android.support.DaggerFragment
 import javax.inject.Inject
 
@@ -33,6 +35,18 @@ class HomeFragment : DaggerFragment() {
         binding = FragmentHomeBinding.bind(view).apply {
             viewModel = homeViewModel
             lifecycleOwner = this@HomeFragment
+        }
+
+        binding?.morePopularTextView?.setOnClickListener {
+            startActivity(MovieListActivity.newIntent(MovieListActivity.EXTRA_POPULAR_MOVIES_DATA, requireContext()))
+        }
+
+        binding?.moreCinemaMoviesTextView?.setOnClickListener {
+            startActivity(MovieListActivity.newIntent(MovieListActivity.EXTRA_MOVIES_NOW_PLAYING_DATA, requireContext()))
+        }
+
+        binding?.moreTvAirTextView?.setOnClickListener {
+            startActivity(MovieListActivity.newIntent(MovieListActivity.EXTRA_TV_SHOW_DATA, requireContext()))
         }
 
         initRecyclerViews()
@@ -78,16 +92,16 @@ class HomeFragment : DaggerFragment() {
         binding?.airTvRecyclerView?.layoutManager = LinearLayoutManager(context).apply {
             orientation = LinearLayoutManager.HORIZONTAL
         }
-        binding?.airTvRecyclerView?.adapter = TvAirAdapter() {
+        binding?.airTvRecyclerView?.adapter = TvAirAdapter({
             navigateToTvShowDetailsCallback(it)
-        }
+        })
 
         binding?.popularMoviesRecyclerView?.layoutManager = LinearLayoutManager(context).apply {
             orientation = LinearLayoutManager.HORIZONTAL
         }
-        binding?.popularMoviesRecyclerView?.adapter = PopularMoviesAdapter() {
+        binding?.popularMoviesRecyclerView?.adapter = PopularMoviesAdapter({
             navigateToMovieDetailsCallback(it)
-        }
+        })
     }
 
     private fun navigateToMovieDetailsCallback(id: Int) {

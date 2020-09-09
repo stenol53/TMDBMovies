@@ -76,4 +76,23 @@ interface TMDBApiService {
     @GET("person/{id}/tv_credits")
     fun getPersonTv(@Path("id") id: Int): Observable<PersonTvShowsResult>
 
+    @GET("search/movie")
+    fun searchMovies(
+        @Query("query") query: String,
+        @Query("page") page: Int = 1,
+        @Query("region") region: String = REGION
+    ): Observable<MovieResult>
+
+    @GET("search/tv")
+    fun searchTv(
+        @Query("query") query: String,
+        @Query("page") page: Int = 1
+    ): Observable<TvResult>
+
+//    @GET("search/people")
+//    fun searchPeople(
+//        @Query("query") query: String,
+//        @Query("page") page: Int = 1,
+//        @Query("region") region: String = REGION
+//    ): Observable<>
 }

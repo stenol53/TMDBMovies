@@ -13,6 +13,9 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
+            android:name=".ui.movielist.MovieListActivity"
+            android:theme="@style/AppThemeNoActionBar" />
+        <activity
             android:name=".ui.person.PersonDetailsActivity"
             android:theme="@style/AppThemeNoActionBar" />
         <activity

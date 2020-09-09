@@ -6,6 +6,7 @@ import com.voak.android.tmdbmovies.ui.bottomnavigation.search.SearchFragment
 import com.voak.android.tmdbmovies.ui.details.movie.MovieDetailsFragment
 import com.voak.android.tmdbmovies.ui.details.tv.TvShowDetailsFragment
 import com.voak.android.tmdbmovies.ui.login.LoginFragment
+import com.voak.android.tmdbmovies.ui.movielist.MovieListFragment
 import com.voak.android.tmdbmovies.ui.person.PersonDetailsFragment
 import dagger.Module
 import dagger.android.ContributesAndroidInjector
@@ -32,4 +33,7 @@ abstract class FragmentBuildersModule {
 
     @ContributesAndroidInjector
     abstract fun contributePersonDetailsFragment(): PersonDetailsFragment
+
+    @ContributesAndroidInjector
+    abstract fun contributeMovieListFragment(): MovieListFragment
 }

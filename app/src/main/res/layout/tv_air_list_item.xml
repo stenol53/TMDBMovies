@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="8dp">
+
+    <com.google.android.material.card.MaterialCardView
+        android:id="@+id/materialCardView2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:strokeWidth="0dp"
+        app:cardBackgroundColor="@android:color/white"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:cardElevation="0dp">
+
+        <ImageView
+            android:id="@+id/tv_air_poster"
+            android:layout_width="match_parent"
+            android:layout_height="200dp"
+            android:scaleType="centerCrop"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            android:contentDescription="@string/description_movie_poster" />
+
+    </com.google.android.material.card.MaterialCardView>
+
+    <TextView
+        android:id="@+id/tv_air_rating_view"
+        android:layout_width="32dp"
+        android:layout_height="32dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="184dp"
+        android:background="@drawable/oval_green"
+        tools:text="7.5"
+        android:textSize="12sp"
+        android:textColor="@android:color/white"
+        android:gravity="center"
+        android:layout_marginBottom="8dp"
+        app:layout_constraintTop_toTopOf="@id/materialCardView2"
+        app:layout_constraintStart_toStartOf="@+id/materialCardView2" />
+
+    <TextView
+        android:id="@+id/tv_air_title"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:paddingBottom="8dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="@+id/tv_air_rating_view"
+        app:layout_constraintTop_toBottomOf="@+id/tv_air_rating_view"
+        tools:text="Звездные войны: Эпизод 9 - Скайуокер. Восход" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

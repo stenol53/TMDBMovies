@@ -80,12 +80,12 @@ class TvShowDetailsFragment : DaggerFragment() {
             }
         })
 
-        binding?.similarRecyclerView?.adapter = TvAirAdapter() {
+        binding?.similarRecyclerView?.adapter = TvAirAdapter({
             parentFragmentManager.beginTransaction()
                 .replace(R.id.fragment_container, instance(it))
                 .addToBackStack(null)
                 .commit()
-        }
+        })
     }
 
     private fun bindViews() {

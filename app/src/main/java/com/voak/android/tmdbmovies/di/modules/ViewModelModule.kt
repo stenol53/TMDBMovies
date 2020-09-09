@@ -4,9 +4,11 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.voak.android.tmdbmovies.di.annotations.ViewModelKey
 import com.voak.android.tmdbmovies.ui.bottomnavigation.home.HomeViewModel
+import com.voak.android.tmdbmovies.ui.bottomnavigation.search.SearchViewModel
 import com.voak.android.tmdbmovies.ui.details.movie.MovieDetailsViewModel
 import com.voak.android.tmdbmovies.ui.details.tv.TvShowDetailsViewModel
 import com.voak.android.tmdbmovies.ui.login.LoginFragmentViewModel
+import com.voak.android.tmdbmovies.ui.movielist.MovieListVieModel
 import com.voak.android.tmdbmovies.ui.person.PersonDetailsViewModel
 import com.voak.android.tmdbmovies.viewmodel.ViewModelFactory
 import dagger.Binds
@@ -40,6 +42,16 @@ abstract class ViewModelModule {
     @IntoMap
     @ViewModelKey(PersonDetailsViewModel::class)
     internal abstract fun bindPersonDetailsViewModel(viewModel: PersonDetailsViewModel): ViewModel
+
+    @Binds
+    @IntoMap
+    @ViewModelKey(MovieListVieModel::class)
+    internal  abstract fun bindMovieListViewModel(viewModel: MovieListVieModel): ViewModel
+
+    @Binds
+    @IntoMap
+    @ViewModelKey(SearchViewModel::class)
+    internal abstract fun bindSearchViewModel(viewModel: SearchViewModel): ViewModel
 
     @Binds
     internal abstract fun bindViewModelFactory(factory: ViewModelFactory): ViewModelProvider.Factory

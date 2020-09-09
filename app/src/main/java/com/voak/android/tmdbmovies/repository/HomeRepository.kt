@@ -2,6 +2,7 @@ package com.voak.android.tmdbmovies.repository
 
 import android.annotation.SuppressLint
 import android.util.Log
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.voak.android.tmdbmovies.api.MovieService
 import com.voak.android.tmdbmovies.api.TvShowService
@@ -30,18 +31,22 @@ class HomeRepository @Inject constructor(
     }
 
     private val _nowPlayingMovies = MutableLiveData<List<Movie>>().apply { value = Collections.emptyList() }
-    val nowPlayingMovies = _nowPlayingMovies
+    val nowPlayingMovies: LiveData<List<Movie>> = _nowPlayingMovies
     private val _tvShowsOnTheAir = MutableLiveData<List<TvShow>>().apply { value = Collections.emptyList() }
-    val tvShowOnTheAir = _tvShowsOnTheAir
+    val tvShowOnTheAir: LiveData<List<TvShow>> = _tvShowsOnTheAir
     private val _popularMovies = MutableLiveData<List<Movie>>().apply { value = Collections.emptyList() }
-    val popularMovies = _popularMovies
+    val popularMovies: LiveData<List<Movie>> = _popularMovies
     private val _loading = MutableLiveData<Boolean>().apply { value = false }
     val loading = _loading
 
+    private var totalPages = 1
+    private var currentPage = 0
 
     @SuppressLint("CheckResult")
     fun getAllData() {
         _loading.value = false
+        totalPages = 1
+        currentPage = 0
         Observable.zip(
             movieService.getMoviesNowPlaying(),
             tvShowService.getTvShowsOnTheAir(),
@@ -66,5 +71,76 @@ class HomeRepository @Inject constructor(
                     _loading.value = false
                 }
             )
+    }
+
+    @SuppressLint("CheckResult")
+    fun getPopularMovies() {
+        if (currentPage + 1 <= totalPages) {
+            currentPage++
+            _loading.value = true
+            movieService.getPopularMovies(currentPage)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(
+                    { result ->
+                        totalPages = result.totalPages
+                        val list = _popularMovies.value?.toMutableList()
+                        list?.addAll(result.result)
+                        _popularMovies.value = list?.toList()
+                        _loading.value = false
+                    },
+                    { error ->
+                        Log.i(TAG, error.localizedMessage)
+                        _loading.value = false
+                    }
+                )
+        }
+    }
+
+    @SuppressLint("CheckResult")
+    fun getMoviesNowPlaying() {
+        if (currentPage + 1 <= totalPages) {
+            currentPage++
+            _loading.value = true
+            movieService.getMoviesNowPlaying(currentPage)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(
+                    { result ->
+                        totalPages = result.totalPages
+                        val list = _nowPlayingMovies.value?.toMutableList()
+                        list?.addAll(result.result)
+                        _nowPlayingMovies.value = list?.toList()
+                        _loading.value = false
+                    },
+                    { error ->
+                        Log.i(TAG, error.localizedMessage)
+                        _loading.value = false
+                    }
+                )
+        }
+    }
+
+    @SuppressLint("CheckResult")
+    fun getTvShowsOnTheAir() {
+        if (currentPage + 1 <= totalPages) {
+            currentPage++
+            tvShowService.getTvShowsOnTheAir(currentPage)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(
+                    { result ->
+                        totalPages = result.pages
+                        val list = _tvShowsOnTheAir.value?.toMutableList()
+                        list?.addAll(result.result)
+                        _tvShowsOnTheAir.value = list?.toList()
+                        _loading.value = false
+                    },
+                    { error ->
+                        Log.i(TAG, error.localizedMessage)
+                        _loading.value = false
+                    }
+                )
+        }
     }
 }

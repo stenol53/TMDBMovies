@@ -32,4 +32,8 @@ class MovieService @Inject constructor(private val apiService: TMDBApiService) {
     fun getSimilarMovies(id: Int, page: Int = 1): Observable<MovieResult> {
         return apiService.getSimilarMovies(id, page)
     }
+
+    fun searchMovies(query: String, page: Int = 1): Observable<MovieResult> {
+        return apiService.searchMovies(query, page)
+    }
 }

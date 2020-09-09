@@ -1,12 +1,10 @@
 package com.voak.android.tmdbmovies.ui.bottomnavigation.home
 
-import android.graphics.drawable.Drawable
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
-import androidx.core.content.res.ResourcesCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.squareup.picasso.Picasso
 import com.voak.android.tmdbmovies.R
@@ -15,12 +13,18 @@ import com.voak.android.tmdbmovies.ui.bottomnavigation.home.TvAirAdapter.TvAirVi
 import com.voak.android.tmdbmovies.utils.IMAGE_BASE_URL
 import java.util.*
 
-class TvAirAdapter(private val holderOnClick: (Int) -> Unit) : RecyclerView.Adapter<TvAirViewHolder>() {
+class TvAirAdapter(private val holderOnClick: (Int) -> Unit, var flag: Boolean = false) : RecyclerView.Adapter<TvAirViewHolder>() {
     private var tvShows: List<TvShow> = Collections.emptyList()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TvAirViewHolder {
-        val view = LayoutInflater.from(parent.context)
-            .inflate(R.layout.tv_air_item, parent, false)
+        val view =
+            if (!flag) {
+                LayoutInflater.from(parent.context)
+                    .inflate(R.layout.tv_air_item, parent, false)
+            } else {
+                LayoutInflater.from(parent.context)
+                    .inflate(R.layout.tv_air_list_item, parent, false)
+            }
 
         return TvAirViewHolder(view)
     }

@@ -13,12 +13,19 @@ import com.voak.android.tmdbmovies.ui.bottomnavigation.home.PopularMoviesAdapter
 import com.voak.android.tmdbmovies.utils.IMAGE_BASE_URL
 import java.util.*
 
-class PopularMoviesAdapter(private val holderOnClick: (Int) -> Unit) : RecyclerView.Adapter<PopularMoviesViewHolder>() {
+class PopularMoviesAdapter(private val holderOnClick: (Int) -> Unit, private val flag: Boolean = false) : RecyclerView.Adapter<PopularMoviesViewHolder>() {
     private var movies: List<Movie> = Collections.emptyList()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PopularMoviesViewHolder {
-        val view = LayoutInflater.from(parent.context)
-            .inflate(R.layout.popular_movie_item, parent, false)
+        val view =
+            if (!flag) {
+                LayoutInflater.from(parent.context)
+                    .inflate(R.layout.popular_movie_item, parent, false)
+            } else {
+                LayoutInflater.from(parent.context)
+                    .inflate(R.layout.movie_list_item, parent, false)
+            }
+
 
         return PopularMoviesViewHolder(view)
     }

@@ -14,17 +14,19 @@ import javax.inject.Singleton
     modules = [
         AndroidInjectionModule::class,
         AppModule::class,
+        NetworkModule::class,
         LoginActivityModule::class,
         BottomNavigationActivityModule::class,
         DetailsActivityModule::class,
-        PersonDetailsActivityModule::class
+        PersonDetailsActivityModule::class,
+        MovieListActivityModule::class
     ]
 )
 interface AppComponent : AndroidInjector<BaseApp>{
     @Component.Builder
     interface Builder {
         @BindsInstance
-        fun application(application: Application): Builder
+        fun application(application: BaseApp): Builder
 
         fun build(): AppComponent
     }

@@ -95,12 +95,12 @@ class MovieDetailsFragment : DaggerFragment() {
             }
         })
 
-        binding?.similarRecyclerView?.adapter = PopularMoviesAdapter() {
+        binding?.similarRecyclerView?.adapter = PopularMoviesAdapter({
             parentFragmentManager.beginTransaction()
                 .replace(R.id.fragment_container, instance(it))
                 .addToBackStack(null)
                 .commit()
-        }
+        })
     }
 
     private fun bindViews() {

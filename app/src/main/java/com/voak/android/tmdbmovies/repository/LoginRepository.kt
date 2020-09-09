@@ -31,7 +31,8 @@ class LoginRepository @Inject constructor(private val clientService: ClientServi
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe(
                 { result -> _sessionId.value = result.sessionId },
-                { error -> _loginError.value = error.localizedMessage }
+                { error -> _loginError.value = error.localizedMessage
+                _loading.value = false }
             )
     }
 

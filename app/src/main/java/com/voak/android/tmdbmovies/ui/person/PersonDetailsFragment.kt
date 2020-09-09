@@ -102,16 +102,16 @@ class PersonDetailsFragment : DaggerFragment() {
         binding?.moviesRecyclerView?.layoutManager = LinearLayoutManager(context).apply {
             orientation = LinearLayoutManager.HORIZONTAL
         }
-        binding?.moviesRecyclerView?.adapter = PopularMoviesAdapter() {
+        binding?.moviesRecyclerView?.adapter = PopularMoviesAdapter({
             navigateToTvShowDetailsCallback(it)
-        }
+        })
 
         binding?.tvShowsRecyclerView?.layoutManager = LinearLayoutManager(context).apply {
             orientation = LinearLayoutManager.HORIZONTAL
         }
-        binding?.tvShowsRecyclerView?.adapter = TvAirAdapter() {
+        binding?.tvShowsRecyclerView?.adapter = TvAirAdapter({
             navigateToMovieDetailsCallback(it)
-        }
+        })
     }
 
     private fun navigateToMovieDetailsCallback(id: Int) {

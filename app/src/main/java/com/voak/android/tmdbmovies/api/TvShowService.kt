@@ -28,4 +28,8 @@ class TvShowService @Inject constructor(private val apiService: TMDBApiService) 
     fun getCast(id: Int): Observable<CastResult> {
         return apiService.getTvShowCast(id)
     }
+
+    fun searchTv(query: String, page: Int = 1): Observable<TvResult> {
+        return apiService.searchTv(query, page)
+    }
 }

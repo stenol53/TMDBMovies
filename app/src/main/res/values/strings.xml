@@ -35,4 +35,6 @@
     <string name="age">Возраст: %1$d</string>
     <string name="birthday">Дата рождения: %1$s</string>
     <string name="place_of_birth">Место рождения: %1$s</string>
+    <string name="search_movies_count">Фильмы: %1$d</string>
+    <string name="search_tv_count">Сериалы: %1$d</string>
 </resources>
