@@ -14,7 +14,9 @@ import com.voak.android.tmdbmovies.databinding.FragmentSearchBinding
 import com.voak.android.tmdbmovies.ui.bottomnavigation.home.PopularMoviesAdapter
 import com.voak.android.tmdbmovies.ui.bottomnavigation.home.TvAirAdapter
 import com.voak.android.tmdbmovies.ui.details.DetailsActivity
+import com.voak.android.tmdbmovies.ui.details.movie.CastAdapter
 import com.voak.android.tmdbmovies.ui.details.movie.MovieDetailsFragment
+import com.voak.android.tmdbmovies.ui.person.PersonDetailsActivity
 import com.voak.android.tmdbmovies.utils.SharedPreferences
 import dagger.android.support.DaggerFragment
 import javax.inject.Inject
@@ -86,6 +88,28 @@ class SearchFragment : DaggerFragment() {
                 }
             }
         })
+
+        binding?.personsRecycler?.layoutManager = LinearLayoutManager(context).apply {
+            orientation = LinearLayoutManager.HORIZONTAL
+        }
+
+        binding?.personsRecycler?.adapter = CastAdapter() {
+            startActivity(PersonDetailsActivity.newIntent(it, requireContext()))
+        }
+
+        binding?.personsRecycler?.addOnScrollListener(object: RecyclerView.OnScrollListener() {
+            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+                super.onScrolled(recyclerView, dx, dy)
+
+                val lastPos: Int = (recyclerView.layoutManager as LinearLayoutManager)
+                    .findLastVisibleItemPosition()
+                val itemsCount: Int = (binding?.personsRecycler?.adapter as CastAdapter).itemCount
+
+                if (dx > 0 && lastPos >= itemsCount - 3) {
+                    binding?.viewModel?.updatePersons()
+                }
+            }
+        })
     }
 
     private fun bindViews() {
@@ -107,12 +131,20 @@ class SearchFragment : DaggerFragment() {
             (binding?.tvShowsRecycler?.adapter as? TvAirAdapter)?.setTvShows(it)
         }
 
+        binding?.viewModel?.getPersonsLiveData()?.observe(viewLifecycleOwner) {
+            (binding?.personsRecycler?.adapter as? CastAdapter)?.setCast(it)
+        }
+
         binding?.viewModel?.getMoviesTotalResultsLiveData()?.observe(viewLifecycleOwner) {
             binding?.moviesCount?.text = getString(R.string.search_movies_count, it)
         }
 
         binding?.viewModel?.getTvTotalResultsLiveData()?.observe(viewLifecycleOwner) {
             binding?.tvShowsCount?.text = getString(R.string.search_tv_count, it)
+        }
+
+        binding?.viewModel?.getPersonsTotalResultLiveData()?.observe(viewLifecycleOwner) {
+            binding?.personsCount?.text = getString(R.string.search_persons_count, it)
         }
 
         binding?.searchView?.let { binding?.viewModel?.bindSearchView(it) }

@@ -6,6 +6,7 @@ import com.voak.android.tmdbmovies.model.Movie
 import com.voak.android.tmdbmovies.model.TvShow
 import com.voak.android.tmdbmovies.repository.SearchRepository
 import com.google.android.material.textfield.TextInputEditText
+import com.voak.android.tmdbmovies.model.Cast
 import javax.inject.Inject
 
 class SearchViewModel @Inject constructor(private val searchRepository: SearchRepository): ViewModel() {
@@ -34,11 +35,23 @@ class SearchViewModel @Inject constructor(private val searchRepository: SearchRe
         return searchRepository.progress
     }
 
+    fun getPersonsLiveData(): LiveData<List<Cast>> {
+        return searchRepository.persons
+    }
+
+    fun getPersonsTotalResultLiveData(): LiveData<Int> {
+        return searchRepository.personTotalResults
+    }
+
     fun updateMovies() {
         searchRepository.updateMovies()
     }
 
     fun updateTv() {
         searchRepository.updateTv()
+    }
+
+    fun updatePersons() {
+        searchRepository.updatePersons()
     }
 }

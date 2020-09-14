@@ -9,15 +9,13 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.google.android.material.textfield.TextInputEditText
 import com.voak.android.tmdbmovies.api.SearchService
-import com.voak.android.tmdbmovies.model.Movie
-import com.voak.android.tmdbmovies.model.MovieResult
-import com.voak.android.tmdbmovies.model.TvResult
-import com.voak.android.tmdbmovies.model.TvShow
+import com.voak.android.tmdbmovies.model.*
 import com.voak.android.tmdbmovies.utils.SharedPreferences
 import io.reactivex.Observable
 import io.reactivex.ObservableOnSubscribe
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.functions.BiFunction
+import io.reactivex.functions.Function3
 import io.reactivex.schedulers.Schedulers
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
@@ -28,10 +26,14 @@ class SearchRepository @Inject constructor(private val searchService: SearchServ
     val movies: LiveData<List<Movie>> = _movies
     private val _tvShows = MutableLiveData<List<TvShow>>()
     val tvShows: LiveData<List<TvShow>> = _tvShows
+    private val _persons = MutableLiveData<List<Cast>>()
+    val persons: LiveData<List<Cast>> = _persons
     private val _moviesTotalResults = MutableLiveData<Int>()
     val moviesTotalResults: LiveData<Int> = _moviesTotalResults
     private val _tvTotalResults = MutableLiveData<Int>()
     val tvTotalResults: LiveData<Int> = _tvTotalResults
+    private val _personTotalResults = MutableLiveData<Int>()
+    val personTotalResults: LiveData<Int> = _personTotalResults
     private val _progress = MutableLiveData<Boolean>()
     val progress: LiveData<Boolean> = _progress
 
@@ -39,6 +41,8 @@ class SearchRepository @Inject constructor(private val searchService: SearchServ
     private var moviesTotalPage: Int = 0
     private var tvCurrentPage: Int = 1
     private var tvTotalPage: Int = 0
+    private var personCurrentPage: Int = 1
+    private var personTotalPage: Int = 0
     private var isFetching = false
 
     @SuppressLint("CheckResult")
@@ -61,10 +65,12 @@ class SearchRepository @Inject constructor(private val searchService: SearchServ
                 Observable.zip(
                     searchService.searchMovies(text),
                     searchService.searchTv(text),
-                    BiFunction<MovieResult, TvResult, Map<String, Any>>() { movieRes, tvRes ->
+                    searchService.searchPerson(text),
+                    Function3<MovieResult, TvResult, SearchPersonResult, Map<String, Any>>() { movieRes, tvRes, personRes ->
                             mapOf(
                                 MOVIES to movieRes,
-                                TV_SHOWS to tvRes
+                                TV_SHOWS to tvRes,
+                                PERSON to personRes
                             )
                     }
                 ).subscribeOn(Schedulers.io())
@@ -73,6 +79,7 @@ class SearchRepository @Inject constructor(private val searchService: SearchServ
                         { result ->
                             val movies = result[MOVIES] as? MovieResult
                             val tv = result[TV_SHOWS] as? TvResult
+                            val persons = result[PERSON] as? SearchPersonResult
 
                             movies?.totalPages?.let {
                                 moviesTotalPage = it
@@ -82,6 +89,12 @@ class SearchRepository @Inject constructor(private val searchService: SearchServ
                                 tvTotalPage = it
                             }
 
+                            persons?.totalPages?.let {
+                                personTotalPage = it
+                            }
+
+                            _personTotalResults.value = persons?.totalResults
+                            _persons.value = persons?.result
                             _moviesTotalResults.value = movies?.totalResults
                             _tvTotalResults.value = tv?.totalResults
                             _movies.value = movies?.result
@@ -145,9 +158,34 @@ class SearchRepository @Inject constructor(private val searchService: SearchServ
         }
     }
 
+    fun updatePersons() {
+        if (personCurrentPage + 1 <= personTotalPage && !isFetching) {
+            isFetching = true
+            personCurrentPage++
+            SharedPreferences.getSearchQuery(context)?.let {
+                searchService.searchPerson(it, personCurrentPage)
+                    .subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(
+                        { result ->
+                            val list = _persons.value?.toMutableList()
+                            list?.addAll(result.result)
+                            _persons.value = list?.toList()
+                            isFetching = false
+                        },
+                        { error ->
+                            Log.i(TAG, error.localizedMessage.orEmpty())
+                            isFetching = false
+                        }
+                    )
+            }
+        }
+    }
+
     companion object {
         private const val MOVIES = "movies"
         private const val TV_SHOWS = "tv_shows"
+        private const val PERSON = "person"
         private const val TAG = "SearchRepository"
     }
 }

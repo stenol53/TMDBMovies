@@ -89,10 +89,10 @@ interface TMDBApiService {
         @Query("page") page: Int = 1
     ): Observable<TvResult>
 
-//    @GET("search/people")
-//    fun searchPeople(
-//        @Query("query") query: String,
-//        @Query("page") page: Int = 1,
-//        @Query("region") region: String = REGION
-//    ): Observable<>
+    @GET("search/person")
+    fun searchPeople(
+        @Query("query") query: String,
+        @Query("page") page: Int = 1,
+        @Query("region") region: String = REGION
+    ): Observable<SearchPersonResult>
 }
